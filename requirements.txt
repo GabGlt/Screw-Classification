@@ -6,4 +6,4 @@ scikit-learn>=1.3.2
 seaborn>=0.12.0
 matplotlib>=3.5.0
 imbalanced-learn
-sktime
+sktime==0.24.1
