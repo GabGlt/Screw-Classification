@@ -253,79 +253,79 @@ elif choice == "🔧 Torque-Only Class Value Classification":
                 
 # --- Class Custom Feature Mode ---
 elif choice == "🚰 Custom Feature Class Value Classification":
-st.subheader("🚰 Predict Class Value Using Multiple Features")
+    st.subheader("🚰 Predict Class Value Using Multiple Features")
 
-st.markdown("**✅ Select features to use:**")
-use_torque = st.checkbox("Torque", True)
-use_angle = st.checkbox("Angle", True)
-use_gradient = st.checkbox("Gradient", True)
-use_step = st.checkbox("Step", True)
-use_metadata = st.checkbox("Metadata (optional)", True)
+    st.markdown("**✅ Select features to use:**")
+    use_torque = st.checkbox("Torque", True)
+    use_angle = st.checkbox("Angle", True)
+    use_gradient = st.checkbox("Gradient", True)
+    use_step = st.checkbox("Step", True)
+    use_metadata = st.checkbox("Metadata (optional)", True)
 
-st.markdown("### 📊 Time Series Input")
-st.info("All selected features should share the same time points.")
-time_input = st.text_input("Time Values (shared)", "0.0,0.1,0.2,0.3,0.4")
+    st.markdown("### 📊 Time Series Input")
+    st.info("All selected features should share the same time points.")
+    time_input = st.text_input("Time Values (shared)", "0.0,0.1,0.2,0.3,0.4")
 
-features = {}
-has_error = False
+    features = {}
+    has_error = False
 
-if use_torque:
-    torque_input = st.text_input("Torque Values", "0.1,0.15,0.2,0.25,0.3")
-    series, error = parse_input_series(time_input, torque_input)
-    if error:
-        st.error(f"⚠️ Torque input error: {error}")
-        has_error = True
-    else:
-        features["torque"] = series  # EDITED: use pd.Series
+    if use_torque:
+        torque_input = st.text_input("Torque Values", "0.1,0.15,0.2,0.25,0.3")
+        series, error = parse_input_series(time_input, torque_input)
+        if error:
+            st.error(f"⚠️ Torque input error: {error}")
+            has_error = True
+        else:
+            features["torque"] = series  # EDITED: use pd.Series
 
-if use_angle:
-    angle_input = st.text_input("Angle Values", "2.5,5.0,7.5,10.0,12.5")
-    series, error = parse_input_series(time_input, angle_input)
-    if error:
-        st.error(f"⚠️ Angle input error: {error}")
-        has_error = True
-    else:
-        features["angle"] = series  # EDITED
+    if use_angle:
+        angle_input = st.text_input("Angle Values", "2.5,5.0,7.5,10.0,12.5")
+        series, error = parse_input_series(time_input, angle_input)
+        if error:
+            st.error(f"⚠️ Angle input error: {error}")
+            has_error = True
+        else:
+            features["angle"] = series  # EDITED
 
-if use_gradient:
-    gradient_input = st.text_input("Gradient Values", "0.01,0.02,0.03,0.04,0.05")
-    series, error = parse_input_series(time_input, gradient_input)
-    if error:
-        st.error(f"⚠️ Gradient input error: {error}")
-        has_error = True
-    else:
-        features["gradient"] = series  # EDITED
+    if use_gradient:
+        gradient_input = st.text_input("Gradient Values", "0.01,0.02,0.03,0.04,0.05")
+        series, error = parse_input_series(time_input, gradient_input)
+        if error:
+            st.error(f"⚠️ Gradient input error: {error}")
+            has_error = True
+        else:
+            features["gradient"] = series  # EDITED
 
-if use_step:
-    step_input = st.text_input("Step Values", "0,0,1,1,1")
-    series, error = parse_input_series(time_input, step_input)
-    if error:
-        st.error(f"⚠️ Step input error: {error}")
-        has_error = True
-    else:
-        features["step"] = series  # EDITED
+    if use_step:
+        step_input = st.text_input("Step Values", "0,0,1,1,1")
+        series, error = parse_input_series(time_input, step_input)
+        if error:
+            st.error(f"⚠️ Step input error: {error}")
+            has_error = True
+        else:
+            features["step"] = series  # EDITED
 
-if use_metadata:
-    st.markdown("### 🧾 Metadata Input")
-    features["workpiece_location"] = st.selectbox("Workpiece Location", ["left", "middle", "right"])
-    features["workpiece_usage"] = st.selectbox("Workpiece Usage", [0, 1])
-    features["workpiece_result"] = st.selectbox("Workpiece Result", ["OK", "NOK"])
-    features["scenario_condition"] = st.selectbox("Scenario Condition", ["normal", "abnormal"])
-    features["scenario_exception"] = st.selectbox("Scenario Exception", [0, 1])
+    if use_metadata:
+        st.markdown("### 🧾 Metadata Input")
+        features["workpiece_location"] = st.selectbox("Workpiece Location", ["left", "middle", "right"])
+        features["workpiece_usage"] = st.selectbox("Workpiece Usage", [0, 1])
+        features["workpiece_result"] = st.selectbox("Workpiece Result", ["OK", "NOK"])
+        features["scenario_condition"] = st.selectbox("Scenario Condition", ["normal", "abnormal"])
+        features["scenario_exception"] = st.selectbox("Scenario Exception", [0, 1])
 
-if st.button("🔍 Predict with Selected Features"):
-    if has_error:
-        st.error("⚠️ Please fix the input errors before predicting.")
-    else:
-        try:
-            # Encode categorical metadata
-            if use_metadata:
-                features = encode_categorical(features)
+    if st.button("🔍 Predict with Selected Features"):
+        if has_error:
+            st.error("⚠️ Please fix the input errors before predicting.")
+        else:
+            try:
+                # Encode categorical metadata
+                if use_metadata:
+                    features = encode_categorical(features)
 
-            # EDITED: Create input DataFrame with pd.Series for time series columns
-            input_df = pd.DataFrame({k: [v] for k, v in features.items()})
+                # EDITED: Create input DataFrame with pd.Series for time series columns
+                input_df = pd.DataFrame({k: [v] for k, v in features.items()})
 
-            prediction = class_full.predict(input_df)[0]
-            st.success(f"🌟 Predicted Workpiece Result: **{prediction}**")
-        except Exception as e:
-            st.error(f"Error during prediction: {str(e)}")
+                prediction = class_full.predict(input_df)[0]
+                st.success(f"🌟 Predicted Workpiece Result: **{prediction}**")
+            except Exception as e:
+                st.error(f"Error during prediction: {str(e)}")
