@@ -19,7 +19,7 @@ def load_models():
         return workpiece_torque, workpiece_full, class_torque, class_full
     except Exception as e:
         st.error(f"Error loading models: {str(e)}")
-        return None, None
+        return None, None, None, None
 
 def pad_values(text):
     tempText = text
