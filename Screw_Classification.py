@@ -98,8 +98,8 @@ st.set_page_config(page_title="Screw Classification", page_icon="🔩", layout="
 st.title("🔩 Screw Classification Inference App")
 
 # Load models at startup
-workpiece_torque, workpiece_full = load_models()
-if workpiece_torque is None or workpiece_full is None:
+workpiece_torque, workpiece_full, class_torque, class_full = load_models()
+if workpiece_torque is None or workpiece_full is None or class_torque is None or class_full is None:
     st.error("Failed to load models. Please check if the model files exist and are valid.")
     st.stop()
 
